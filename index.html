@@ -34,15 +34,15 @@
     }
 
     .poop {
-      animation: fall 2s linear infinite; /* 수정: 새로운 애니메이션 추가 */
+      animation: fall 4s linear infinite; /* 수정: 새로운 애니메이션 추가 */
     }
 
     @keyframes fall {
+      from {
+        transform: translateY(-50px); /* 수정: 초기 위치를 상단에서 하단으로 변경 */
+      }
       to {
         transform: translateY(400px);
-      }
-      100% {
-        left: calc((100% - 50px) * Math.random()); /* 랜덤한 위치로 이동 */
       }
     }
   </style>
@@ -53,6 +53,20 @@
     <div class="player"></div>
     <div class="poop"></div>
   </div>
-  <script src="script.js"></script>
+  <script>
+    const poopElement = document.querySelector('.poop');
+
+    function updatePoopPosition() {
+      poopElement.style.left = `${Math.random() * (100 - 50)}%`;
+    }
+
+    poopElement.addEventListener('animationend', () => {
+      updatePoopPosition();
+    });
+
+    // setInterval(() => {
+    //   updatePoopPosition();
+    // }, 4000); // 4초마다 위치 업데이트
+  </script>
 </body>
 </html>
