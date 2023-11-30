@@ -37,8 +37,9 @@
     .poop {
       width: 50px;
       height: 50px;
+      position: absolute;
       animation: fall 4s linear infinite; /* 수정: 새로운 애니메이션 추가 */
-      background-image: url('ddong.png'); /* 이미지 경로 설정 */
+      background-image: url('ddongddong.png'); /* 이미지 경로 설정 */
     }
 
     @keyframes fall {
@@ -62,18 +63,23 @@
   <div class="game-container">
     <div class="player"></div>
     <div class="poop"></div>
+    <div class="poop"></div>
+    <div class="poop"></div>
+    <div class="poop"></div>
   </div>
   <script>
-    const poopElement = document.querySelector('.poop');
+    const poopElements = document.querySelectorAll('.poop');
     const playerElement = document.querySelector('.player');
     const containerElement = document.querySelector('.game-container');
 
-    function updatePoopPosition() {
+    function updatePoopPosition(poopElement) {
       poopElement.style.left = `${Math.random() * (100 - 50)}%`;
     }
 
-    poopElement.addEventListener('animationiteration', () => {
-      updatePoopPosition();
+    poopElements.forEach((poopElement) => {
+      poopElement.addEventListener('animationiteration', () => {
+        updatePoopPosition(poopElement);
+      });
     });
 
     document.addEventListener('keydown', (event) => {
@@ -90,20 +96,28 @@
           playerElement.style.left = `${Math.min(containerRect.width - playerWidth, playerLeft + 10)}px`;
           break;
       }
+    });
+
+    setInterval(() => {
+      const playerWidth = playerElement.offsetWidth;
+      const playerLeft = playerElement.offsetLeft;
+      const playerTop = playerElement.offsetTop;
 
       // 충돌 체크
-      const poopRect = poopElement.getBoundingClientRect();
-      const playerRect = playerElement.getBoundingClientRect();
+      poopElements.forEach((poopElement) => {
+        const poopRect = poopElement.getBoundingClientRect();
+        const playerRect = playerElement.getBoundingClientRect();
 
-      if (
-        poopRect.left < playerRect.right &&
-        poopRect.right > playerRect.left &&
-        poopRect.top < playerRect.bottom &&
-        poopRect.bottom > playerTop
-      ) {
-        alert('다시 김하현 화이팅!');
-      }
-    });
+        if (
+          poopRect.left < playerRect.right &&
+          poopRect.right > playerRect.left &&
+          poopRect.top < playerRect.bottom &&
+          poopRect.bottom > playerTop
+        ) {
+          alert('다시 김하현 화이팅!');
+        }
+      });
+    }, 100); // 100ms 간격으로 체크
   </script>
 </body>
 </html>
