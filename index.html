@@ -25,17 +25,19 @@
       position: absolute;
       width: 50px;
       height: 50px;
-      background-color: #3498db;
+      background-size: cover;
     }
 
     .player {
       bottom: 0;
       left: 50%; /* 플레이어를 가운데 위치로 조정 */
       transform: translateX(-50%); /* 플레이어를 가운데 위치로 조정 */
+      background-image: url('003901.png');
     }
 
     .poop {
-      animation: fall 2s linear infinite; /* 수정: 새로운 애니메이션 추가 */
+      animation: fall 5s linear infinite; /* 수정: 새로운 애니메이션 추가 */
+      background-image: url('ddong.png');
     }
 
     @keyframes fall {
@@ -60,33 +62,48 @@
     <div class="player"></div>
     <div class="poop"></div>
   </div>
-  <script>
-    const poopElement = document.querySelector('.poop');
-    const playerElement = document.querySelector('.player');
-    const containerElement = document.querySelector('.game-container');
+<!-- ... (이미지 설정 부분은 위의 코드와 동일) -->
 
-    function updatePoopPosition() {
-      poopElement.style.left = `${Math.random() * (350 - 50)+50}px`;
+<script>
+  const poopElement = document.querySelector('.poop');
+  const playerElement = document.querySelector('.player');
+  const containerElement = document.querySelector('.game-container');
+
+  function updatePoopPosition() {
+    poopElement.style.left = `${Math.random() * (100 - 50)}%`;
+  }
+
+  poopElement.addEventListener('animationiteration', () => {
+    updatePoopPosition();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    const playerWidth = playerElement.offsetWidth;
+    const containerRect = containerElement.getBoundingClientRect();
+    const playerLeft = playerElement.offsetLeft;
+
+    switch (event.key) {
+      case 'ArrowLeft':
+        playerElement.style.left = `${Math.max(0, playerLeft - 10)}px`;
+        break;
+      case 'ArrowRight':
+        playerElement.style.left = `${Math.min(containerRect.width - playerWidth, playerLeft + 10)}px`;
+        break;
     }
 
-    poopElement.addEventListener('animationiteration', () => {
-      updatePoopPosition();
-    });
+    // 충돌 체크
+    const poopRect = poopElement.getBoundingClientRect();
+    const playerRect = playerElement.getBoundingClientRect();
 
-    document.addEventListener('keydown', (event) => {
-      const playerWidth = playerElement.offsetWidth;
-      const containerRect = containerElement.getBoundingClientRect();
-      const playerLeft = playerElement.offsetLeft;
-
-      switch (event.key) {
-        case 'ArrowLeft':
-          playerElement.style.left = `${Math.max(0, playerLeft - 10)}px`;
-          break;
-        case 'ArrowRight':
-          playerElement.style.left = `${Math.min(containerRect.width - playerWidth, playerLeft + 10)}px`;
-          break;
-      }
-    });
-  </script>
+    if (
+      poopRect.left < playerRect.right &&
+      poopRect.right > playerRect.left &&
+      poopRect.top < playerRect.bottom &&
+      poopRect.bottom > playerRect.top
+    ) {
+      alert('다시 김하현 화이팅!');
+    }
+  });
+</script>
 </body>
 </html>
