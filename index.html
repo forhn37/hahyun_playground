@@ -38,11 +38,17 @@
     }
 
     @keyframes fall {
-      from {
-        transform: translateY(-50px); /* 수정: 초기 위치를 상단에서 하단으로 변경 */
+      0% {
+        transform: translateY(0); /* 초기 위치 */
       }
-      to {
-        transform: translateY(400px);
+      25% {
+        transform: translateY(200px); /* 중간 위치 */
+      }
+      50% {
+        transform: translateY(400px); /* 바닥 위치 */
+      }
+      100% {
+        transform: translateY(400px); /* 바닥 위치에서 유지됨 */
       }
     }
   </style>
@@ -55,18 +61,31 @@
   </div>
   <script>
     const poopElement = document.querySelector('.poop');
+    const playerElement = document.querySelector('.player');
+    const containerElement = document.querySelector('.game-container');
 
     function updatePoopPosition() {
       poopElement.style.left = `${Math.random() * (100 - 50)}%`;
     }
 
-    poopElement.addEventListener('animationend', () => {
+    poopElement.addEventListener('animationiteration', () => {
       updatePoopPosition();
     });
 
-    // setInterval(() => {
-    //   updatePoopPosition();
-    // }, 4000); // 4초마다 위치 업데이트
+    document.addEventListener('keydown', (event) => {
+      const playerWidth = playerElement.offsetWidth;
+      const containerRect = containerElement.getBoundingClientRect();
+      const playerLeft = playerElement.offsetLeft;
+
+      switch (event.key) {
+        case 'ArrowLeft':
+          playerElement.style.left = `${Math.max(0, playerLeft - 10)}px`;
+          break;
+        case 'ArrowRight':
+          playerElement.style.left = `${Math.min(containerRect.width - playerWidth, playerLeft + 10)}px`;
+          break;
+      }
+    });
   </script>
 </body>
 </html>
